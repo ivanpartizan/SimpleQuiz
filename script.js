@@ -18,3 +18,35 @@ const alert = document.querySelector("#alert");
 //    5. For each incorrect answer add the class `incorrect` to the parent with the class `question-item` and remove the class `correct`.
 //    6. BONUS: Make sure unanswered questions show up as incorrect. The easiest way to do this is to add the incorrect class and removing the correct class from all question items before checking the correct answers
 //    7. BONUS: If all answers are correct show the element with the id `alert` and hide it after one second (look into setTimeout) (use the class active to show the alert and remove the class to hide it)
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  questions.forEach((question) => {
+    question.classList.add("incorrect");
+    question.classList.remove("correct");
+  });
+
+  const checked = Array.from(answers).filter(
+    (answer) => answer.checked == true
+  );
+  checked.forEach((answer) => {
+    const isCorrect = answer.value == "true";
+    const questionItem = answer.closest(".question-item");
+    if (isCorrect) {
+      questionItem.classList.add("correct");
+      questionItem.classList.remove("incorrect");
+    } else {
+      questionItem.classList.add("incorrect");
+      questionItem.classList.remove("correct");
+    }
+
+    const allTrue = checked.every((answer) => answer.value == "true");
+    const allAnswered = checked.length === questions.length;
+
+    if (allTrue && allAnswered) {
+      alert.classList.add("active");
+      setTimeout(() => {
+        alert.classList.remove("active");
+      }, 1000);
+    }
+  });
+});
